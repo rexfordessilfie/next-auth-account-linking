@@ -77,12 +77,13 @@ Once the application is started, you may go to the demo and attempt the one-user
 
 
 # Discussion ✋
+* ⚠️ **Potential security risks** ahead! See: https://github.com/nextauthjs/next-auth/pull/1002#issuecomment-754071687
+* You may also want to distinguish between "primary" and "secondary" accounts. For example there can be use-cases where sign-in's are only allowed through a single provider, but other accounts from other providers may be linked to the primary account for verification purposes. You may keep track of the primary provider (provider at first sign in/up) and block the `signIn` if it is not through that provider!
 * NextAuth was likely not designed with this use case as first class. There is a big assumption here that a sign-in attempt with a currently signed in user is an attempt to link accounts. This may not always be the case for certain applications. 
   * For example, this could be the case if your sign in page/endpoints accessible when a user is already signed in, allowing for the possibility of a second user signing in on the same device (e.g. a shared computer). See the discussion linked below for ideas/solutions for this!
 * I have not thought too much about what the migration strategy would look like for already existing applications that seek to add this account linking functionality and this should be approached carefully! For now, some thoughts I have are as follows:
   *  First, add the logic to start including an application-level unique `userId` property in the JWT object, by invalidating/revoking existing sessions to force users to sign in again and get a new JWT with  `userId` property.
   *  After this, roll in the logic to start linking accounts on sign-in's.
-* One may also want to distinguish between "primary" and "secondary" accounts. For example there can be use-cases where sign-in's are only allowed through a single provider, but other accounts from other providers may be linked to the primary account for verification purposes.
 * This demo has also not been tested beyond the providers used in this demo, but the solution looks to be provider agnostic and relies heavily on the `account.providerAccountId` + `account.provider` properties in identifying existing accounts on sign-in's. It works to the degree that providers/or next-auth supplies a uniquely identifiable id (`account.providerAccountId`) for each user on the provider's platform. The logic for determining existing accounts may be modified to rely on other properties if necessary.
 * The demo is very minimal, but supports features such as ensuring an account (as identified by `account.provider` + `account.providerAccountId`) can only be linked to one user. It does not support features such as unlinking or removing connected accounts.
 
