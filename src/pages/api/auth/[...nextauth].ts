@@ -8,7 +8,7 @@ import NextAuth, { NextAuthOptions, getServerSession } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import SpotifyProvider from "next-auth/providers/spotify";
 import GoogleProvider from "next-auth/providers/google";
-
+import { env } from "@/env.mjs";
 /**
  * Returns a NextAuthOptions object with extended functionality that requires a request and response object
  * In this specific case, the extended functionality allows for one user multiple accounts
@@ -23,16 +23,16 @@ export const getNextAuthOptions = <Req extends Request, Res extends Response>(
   const extendedOptions: NextAuthOptions = {
     providers: [
       GithubProvider({
-        clientId: process.env.GITHUB_ID!,
-        clientSecret: process.env.GITHUB_SECRET!
+        clientId: env.GITHUB_CLIENT_ID!,
+        clientSecret: env.GITHUB_CLIENT_SECRET!
       }),
       SpotifyProvider({
-        clientId: process.env.SPOTIFY_CLIENT_ID!,
-        clientSecret: process.env.SPOTIFY_CLIENT_SECRET!
+        clientId: env.SPOTIFY_CLIENT_ID!,
+        clientSecret: env.SPOTIFY_CLIENT_SECRET!
       }),
       GoogleProvider({
-        clientId: process.env.GOOGLE_CLIENT_ID!,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET!
+        clientId: env.GOOGLE_CLIENT_ID!,
+        clientSecret: env.GOOGLE_CLIENT_SECRET!
       })
     ],
     pages: {
