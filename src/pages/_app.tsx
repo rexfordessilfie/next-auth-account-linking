@@ -8,7 +8,7 @@ export default function App({
 }: AppProps<SessionProviderProps>) {
   return (
     <SessionProvider>
-      <Component {...pageProps} />;
+      <Component {...pageProps} />
     </SessionProvider>
   );
 }
