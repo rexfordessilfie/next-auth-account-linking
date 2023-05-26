@@ -35,6 +35,11 @@ export const getNextAuthOptions = <Req extends Request, Res extends Response>(
         clientSecret: process.env.GOOGLE_CLIENT_SECRET!
       })
     ],
+    pages: {
+      signIn: "/",
+      error: "/",
+      signOut: "/"
+    },
     callbacks: {
       async signIn(params) {
         const { account, user } = params;
@@ -51,20 +56,23 @@ export const getNextAuthOptions = <Req extends Request, Res extends Response>(
         // and we have an account that is being signed in with
         if (account && currentUserId) {
           // Do the account linking
-          const alreadyLinkedAccount = await findAccount({
+          const existingAccount = await findAccount({
             provider: account.provider,
             providerAccountId: account.providerAccountId
           });
 
-          if (!alreadyLinkedAccount) {
-            // Link the new account
-            await createAccount({
-              providerAccountId: account.providerAccountId,
-              provider: account.provider,
-              userId: currentUserId,
-              email: user.email! // Email field not absolutely necessary, just for keeping record of user emails
-            });
+          if (existingAccount) {
+            throw new Error("Account is already connected to another user!");
           }
+
+          // Only link accounts that have not yet been linked
+          // Link the new account
+          await createAccount({
+            providerAccountId: account.providerAccountId,
+            provider: account.provider,
+            userId: currentUserId,
+            email: user.email! // Email field not absolutely necessary, just for keeping record of user emails
+          });
 
           // Redirect to the home page after linking is complete
           return "/";
