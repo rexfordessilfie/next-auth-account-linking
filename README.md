@@ -1,6 +1,9 @@
 # next-auth-account-linking demo
 This project demonstrates an approach for supporting ["one user, multiple account providers"](https://github.com/nextauthjs/next-auth/discussions/1702#discussioncomment-5995307) with [NextAuth.js](https://next-auth.js.org/).
 
+<img width="1648" alt="Screenshot 2023-05-25 at 23 01 29" src="https://github.com/rexfordessilfie/next-auth-account-linking/assets/43508242/e11e7d94-691b-4455-9ef0-cc452b384241">
+
+
 # How It Works
 The primary logic for how this is achieved is inside of the [src/pages/api/auth/[...nextauth].ts](src/pages/api/auth/[...nextauth].ts) file. 
 
