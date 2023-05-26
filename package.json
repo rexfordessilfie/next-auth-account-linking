@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "migrations:generate": "drizzle-kit generate:pg --out src/lib/db/migrations --schema src/lib/db/schema.ts",
-    "migrations:run": "npx tsx src/lib/db/migrate.ts"
+    "migrations:run": "export $(cat .env.local | xargs) ; npx tsx src/lib/db/migrate.ts"
   },
   "dependencies": {
     "@t3-oss/env-nextjs": "^0.3.1",

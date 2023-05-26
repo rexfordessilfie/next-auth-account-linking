@@ -4,7 +4,6 @@ import { z } from "zod";
 export const env = createEnv({
   server: {
     DATABASE_URL: z.string().url(),
-    DATABASE_AUTH_TOKEN: z.string(),
     NEXTAUTH_SECRET: z.string(),
     GITHUB_CLIENT_ID: z.string(),
     GITHUB_CLIENT_SECRET: z.string(),
@@ -16,7 +15,6 @@ export const env = createEnv({
   client: {},
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,
-    DATABASE_AUTH_TOKEN: process.env.DATABASE_AUTH_TOKEN,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
     GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
