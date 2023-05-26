@@ -4,8 +4,8 @@ import { getServerSession } from "next-auth";
 import { getNextAuthOptions } from "./api/auth/[...nextauth]";
 import { findUserById, getUserAccounts } from "@/lib/crud";
 import Link from "next/link";
-import { FaGithub, FaGoogle, FaSpotify, FaWindowClose } from "react-icons/fa";
-import { useEffect, useState } from "react";
+import { FaGithub, FaGoogle, FaSpotify } from "react-icons/fa";
+import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useToast } from "@/components/Toast";
 
@@ -57,10 +57,10 @@ export default function Home({
   ];
 
   const userDetails = [
-    {
-      key: "Sign-in Email",
-      value: session?.user?.email
-    },
+    // {
+    //   key: "Sign-in Email",
+    //   value: session?.user?.email
+    // },
     {
       key: "User ID",
       value: user?.id
@@ -68,6 +68,10 @@ export default function Home({
     {
       key: "Primary Provider",
       value: user?.provider
+    },
+    {
+      key: "Linked Providers",
+      value: accounts.map((account) => account.provider).join(", ")
     }
   ];
 
