@@ -12,7 +12,7 @@ const selectAccountSchema = createInsertSchema(accounts);
 
 export type IUser = z.infer<typeof selectUserSchema>;
 type IUserInsert = z.infer<typeof insertUserSchema>;
-type IAccount = z.infer<typeof selectAccountSchema>;
+export type IAccount = z.infer<typeof selectAccountSchema>;
 type IAccountFind = Pick<IAccount, "providerAccountId" | "provider">;
 type IAccountInsert = z.infer<typeof insertAccountSchema>;
 

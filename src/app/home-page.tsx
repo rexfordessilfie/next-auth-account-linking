@@ -1,38 +1,42 @@
-import { useSession, signIn, signOut } from "next-auth/react";
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
-import { getServerSession } from "next-auth";
-import { getNextAuthOptions } from "./api/auth/[...nextauth]";
-import { findUserById, getUserAccounts } from "@/lib/crud";
+"use client";
+import { signIn, signOut } from "next-auth/react";
+
 import Link from "next/link";
 import { FaGithub, FaGoogle, FaSpotify } from "react-icons/fa";
 import { useEffect } from "react";
-import { useRouter } from "next/router";
 import { useToast } from "@/components/Toast";
+import { useSearchParams, useRouter } from "next/navigation";
+import { IAccount, IUser } from "@/lib/crud";
 
-export default function Home({
+export function HomePage({
   accounts,
   user,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const { data: session, status } = useSession();
-  const isAuthenticated = status === "authenticated";
+}: {
+  accounts: IAccount[];
+  user?: IUser | null;
+}) {
+  const isAuthenticated = !!user;
 
   const { showToast, hideToast } = useToast();
+
+  const searchParams = useSearchParams();
 
   const router = useRouter();
 
   useEffect(() => {
-    if (router.query?.error) {
+    const error = searchParams?.get("error");
+    if (error) {
       showToast({
-        message: router.query.error as string,
+        message: error,
         type: "error",
       });
     }
 
     setTimeout(() => {
       hideToast();
-      router.replace("/", undefined, { shallow: true });
+      router.replace("/");
     }, 5000);
-  }, [hideToast, router, router.query, showToast]);
+  }, [hideToast, router, searchParams, showToast]);
 
   const handleSignIn = (provider: string) => {
     signIn(provider);
@@ -157,29 +161,4 @@ export default function Home({
       </div>
     </main>
   );
-}
-
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getServerSession(
-    context.req,
-    context.res,
-    getNextAuthOptions(context.req, context.res),
-  );
-
-  console.log(session);
-
-  if (session?.userId) {
-    return {
-      props: {
-        user: await findUserById(session.userId),
-        accounts: await getUserAccounts(session.userId),
-      },
-    };
-  }
-
-  return {
-    props: {
-      accounts: [],
-    },
-  };
 }

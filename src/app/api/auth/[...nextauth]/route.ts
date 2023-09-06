@@ -9,6 +9,12 @@ import GithubProvider from "next-auth/providers/github";
 import SpotifyProvider from "next-auth/providers/spotify";
 import GoogleProvider from "next-auth/providers/google";
 import { env } from "@/env.mjs";
+import { NextRequest } from "next/server";
+
+type RouteHandlerContext = {
+  params: { nextauth: string[] };
+};
+
 /**
  * Returns a NextAuthOptions object with extended functionality that requires a request and response object
  * In this specific case, the extended functionality allows for one user multiple accounts
@@ -16,10 +22,7 @@ import { env } from "@/env.mjs";
  * @param res A NextResponse
  * @returns A NextAuthOptions object with extended functionality that requires a request and response object
  */
-export const getNextAuthOptions = <Req extends Request, Res extends Response>(
-  req: NextApiRequest | GetServerSidePropsContext["req"],
-  res: NextApiResponse | GetServerSidePropsContext["res"],
-) => {
+export const getNextAuthOptions = () => {
   const extendedOptions: NextAuthOptions = {
     providers: [
       GithubProvider({
@@ -44,11 +47,7 @@ export const getNextAuthOptions = <Req extends Request, Res extends Response>(
       async signIn(params) {
         const { account, user } = params;
 
-        const currentSession = await getServerSession(
-          req,
-          res,
-          extendedOptions,
-        );
+        const currentSession = await getServerSession(extendedOptions);
 
         const currentUserId = currentSession?.userId;
 
@@ -132,6 +131,8 @@ export const getNextAuthOptions = <Req extends Request, Res extends Response>(
   return extendedOptions;
 };
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  return NextAuth(req, res, getNextAuthOptions(req, res));
-}
+const handler = (req: NextRequest, context: RouteHandlerContext) => {
+  return NextAuth(req, context, getNextAuthOptions());
+};
+
+export { handler as GET, handler as POST };

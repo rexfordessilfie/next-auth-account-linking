@@ -1,3 +1,4 @@
+"use client";
 import { createContext, useCallback, useContext, useState } from "react";
 import { FaWindowClose } from "react-icons/fa";
 
