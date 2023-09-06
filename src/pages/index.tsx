@@ -11,7 +11,7 @@ import { useToast } from "@/components/Toast";
 
 export default function Home({
   accounts,
-  user
+  user,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { data: session, status } = useSession();
   const isAuthenticated = status === "authenticated";
@@ -24,7 +24,7 @@ export default function Home({
     if (router.query?.error) {
       showToast({
         message: router.query.error as string,
-        type: "error"
+        type: "error",
       });
     }
 
@@ -42,18 +42,18 @@ export default function Home({
     {
       id: "github",
       name: "GitHub",
-      Component: <FaGithub size={24} />
+      Component: <FaGithub size={24} />,
     },
     {
       id: "spotify",
       name: "Spotify",
-      Component: <FaSpotify className="text-green-500" size={24} />
+      Component: <FaSpotify className="text-green-500" size={24} />,
     },
     {
       id: "google",
       name: "Google",
-      Component: <FaGoogle className="text-red-500" size={24} />
-    }
+      Component: <FaGoogle className="text-red-500" size={24} />,
+    },
   ];
 
   const userDetails = [
@@ -63,16 +63,16 @@ export default function Home({
     // },
     {
       key: "User ID",
-      value: user?.id
+      value: user?.id,
     },
     {
       key: "Primary Provider",
-      value: user?.provider
+      value: user?.provider,
     },
     {
       key: "Linked Providers",
-      value: accounts.map((account) => account.provider).join(", ")
-    }
+      value: accounts.map((account) => account.provider).join(", "),
+    },
   ];
 
   const linkedProviders = accounts.map((account) => account.provider);
@@ -163,7 +163,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getServerSession(
     context.req,
     context.res,
-    getNextAuthOptions(context.req, context.res)
+    getNextAuthOptions(context.req, context.res),
   );
 
   console.log(session);
@@ -172,14 +172,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return {
       props: {
         user: await findUserById(session.userId),
-        accounts: await getUserAccounts(session.userId)
-      }
+        accounts: await getUserAccounts(session.userId),
+      },
     };
   }
 
   return {
     props: {
-      accounts: []
-    }
+      accounts: [],
+    },
   };
 }

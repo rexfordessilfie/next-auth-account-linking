@@ -6,5 +6,5 @@ import { env } from "@/env.mjs";
 const migrationClient = postgres(env.DATABASE_URL, { max: 1, ssl: "allow" });
 
 migrate(drizzle(migrationClient), {
-  migrationsFolder: "src/lib/db/migrations"
+  migrationsFolder: "src/lib/db/migrations",
 });

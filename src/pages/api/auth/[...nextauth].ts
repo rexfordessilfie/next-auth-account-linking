@@ -2,7 +2,7 @@ import { createAccount, createUser, findAccount } from "@/lib/crud";
 import {
   GetServerSidePropsContext,
   NextApiRequest,
-  NextApiResponse
+  NextApiResponse,
 } from "next";
 import NextAuth, { NextAuthOptions, getServerSession } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
@@ -18,27 +18,27 @@ import { env } from "@/env.mjs";
  */
 export const getNextAuthOptions = <Req extends Request, Res extends Response>(
   req: NextApiRequest | GetServerSidePropsContext["req"],
-  res: NextApiResponse | GetServerSidePropsContext["res"]
+  res: NextApiResponse | GetServerSidePropsContext["res"],
 ) => {
   const extendedOptions: NextAuthOptions = {
     providers: [
       GithubProvider({
         clientId: env.GITHUB_CLIENT_ID!,
-        clientSecret: env.GITHUB_CLIENT_SECRET!
+        clientSecret: env.GITHUB_CLIENT_SECRET!,
       }),
       SpotifyProvider({
         clientId: env.SPOTIFY_CLIENT_ID!,
-        clientSecret: env.SPOTIFY_CLIENT_SECRET!
+        clientSecret: env.SPOTIFY_CLIENT_SECRET!,
       }),
       GoogleProvider({
         clientId: env.GOOGLE_CLIENT_ID!,
-        clientSecret: env.GOOGLE_CLIENT_SECRET!
-      })
+        clientSecret: env.GOOGLE_CLIENT_SECRET!,
+      }),
     ],
     pages: {
       signIn: "/",
       error: "/",
-      signOut: "/"
+      signOut: "/",
     },
     callbacks: {
       async signIn(params) {
@@ -47,7 +47,7 @@ export const getNextAuthOptions = <Req extends Request, Res extends Response>(
         const currentSession = await getServerSession(
           req,
           res,
-          extendedOptions
+          extendedOptions,
         );
 
         const currentUserId = currentSession?.userId;
@@ -58,7 +58,7 @@ export const getNextAuthOptions = <Req extends Request, Res extends Response>(
           // Do the account linking
           const existingAccount = await findAccount({
             provider: account.provider,
-            providerAccountId: account.providerAccountId
+            providerAccountId: account.providerAccountId,
           });
 
           if (existingAccount) {
@@ -71,7 +71,7 @@ export const getNextAuthOptions = <Req extends Request, Res extends Response>(
             providerAccountId: account.providerAccountId,
             provider: account.provider,
             userId: currentUserId,
-            email: user.email! // Email field not absolutely necessary, just for keeping record of user emails
+            email: user.email!, // Email field not absolutely necessary, just for keeping record of user emails
           });
 
           // Redirect to the home page after linking is complete
@@ -91,7 +91,7 @@ export const getNextAuthOptions = <Req extends Request, Res extends Response>(
         if (account) {
           const existingAppAccount = await findAccount({
             provider: account.provider,
-            providerAccountId: account.providerAccountId
+            providerAccountId: account.providerAccountId,
           });
 
           // User account already exists so set user id on token to be added to session in the session callback
@@ -102,14 +102,14 @@ export const getNextAuthOptions = <Req extends Request, Res extends Response>(
           // No account exists under this provider account id so probably new "user"
           if (!existingAppAccount) {
             const appUser = await createUser({
-              provider: account.provider // Provider field not absolutely necessary, just for keeping record of provider the account was created with
+              provider: account.provider, // Provider field not absolutely necessary, just for keeping record of provider the account was created with
             });
 
             const newAppAccount = await createAccount({
               providerAccountId: account.providerAccountId,
               provider: account.provider,
               userId: appUser.id,
-              email: user.email! // Email field not absolutely necessary, just for keeping record of user emails
+              email: user.email!, // Email field not absolutely necessary, just for keeping record of user emails
             });
 
             token.userId = newAppAccount.userId;
@@ -125,8 +125,8 @@ export const getNextAuthOptions = <Req extends Request, Res extends Response>(
         // when we make the call to getServerSession
         session.userId = token.userId;
         return session;
-      }
-    }
+      },
+    },
   };
 
   return extendedOptions;

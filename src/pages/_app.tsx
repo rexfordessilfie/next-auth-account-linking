@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export default function App({
   Component,
-  pageProps: { session, ...pageProps }
+  pageProps: { session, ...pageProps },
 }: AppProps<SessionProviderProps>) {
   return (
     <SessionProvider>

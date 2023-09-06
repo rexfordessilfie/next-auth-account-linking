@@ -13,7 +13,7 @@ type ToastProps = {
 
 const ToastContext = createContext({
   showToast: (_notification: ToastData) => {},
-  hideToast: () => {}
+  hideToast: () => {},
 });
 
 export const Toast = ({ notification, onClose }: ToastProps) => {
@@ -44,7 +44,7 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
 
   const showToast = useCallback(
     (notification: ToastData) => setNotification(notification),
-    []
+    [],
   );
   const hideToast = useCallback(() => setNotification(undefined), []);
 
@@ -52,7 +52,7 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
     <ToastContext.Provider
       value={{
         showToast,
-        hideToast
+        hideToast,
       }}
     >
       <Toast notification={notification} onClose={onClose} />
